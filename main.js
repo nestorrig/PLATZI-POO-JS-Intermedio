@@ -1,42 +1,54 @@
-// const obj1 = {
-//   a: "a",
-//   b: "b",
-//   c: {
-//     d: "d",
-//     e: "e",
-//   },
-// };
-
-// const stringifiedComplexObject = JSON.stringify(obj1);
-// const obj2 = JSON.parse(stringifiedComplexObject);
-
-// function recursive() {
-//   if (condition) {
-
-//   } else {
-
-//   }
-// }
-let numeritos = [
-  15, 4, 89, 10, 1, 3, 7, 9, 2, 5, 6, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21,
-  22, 23, 24,
-];
-// let numerito = 0;
-
-// for (let i = 0; i < numeritos.length; i++) {
-//   numerito = numeritos[i];
-//   console.log(i, numerito);
-// }
-
-function recursive(numbersArray) {
-  if (numbersArray.length != 0) {
-    const firstNumber = numbersArray[0];
-    console.log(firstNumber);
-    numbersArray.shift();
-    return recursive(numbersArray);
+const obj1 = {
+  a: "a",
+  b: "b",
+  c: {
+    d: "d",
+    e: "e",
+  },
+  editA() {
+    this.a = "AAAAA";
   }
+};
+
+function isObject(obj) {
+  return typeof obj === "object" && obj.constructor === Object;
 }
-recursive(numeritos);
+
+function isArray(obj) {
+  return typeof obj === "object" && obj.constructor === Array;
+}
+
+function deepCopy(subject) {
+  let copySubject;
+
+  const subjectIsObject = isObject(subject);
+  const subjectIsArray = isArray(subject);
+
+  if (subjectIsArray) {
+    copySubject = [];
+  } else if (subjectIsObject) {
+    copySubject = {};
+  } else {
+    return subject;
+  }
+
+  for (const key in subject) {
+    const keyIsObject = isObject(subject[key]);
+    const keyIsArray = isArray(subject[key]);
+
+    if (keyIsArray || keyIsObject) {
+      copySubject[key] = deepCopy(subject[key]);
+    } else {
+      if (subjectIsArray) {
+        copySubject.push(subject[key]);
+      } else {
+        copySubject[key] = subject[key];
+      }
+    }
+  }
+
+  return copySubject;
+}
 
 // function recursiveDeepCopy(obj) {
 //   if (obj === null || typeof obj !== "object") {
